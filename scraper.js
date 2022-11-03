@@ -20,7 +20,7 @@ async function accessFPL() {
     "#v-rebrand > div.wrapper.top > div.wrapper--content.wrapper--content__relative > nav > ul > li.nav--buttons.nav--item > button.btn.btn-secondary.btn-cancel"
   );
   await page.type("#confirm-ticket", "ng5 7at");
-  await page.type("#confirm-email", "alexward95@hotmail.com");
+  await page.type("#confirm-email", "");
   await page.click(
     "#v-rebrand > div.wrapper.top > div.wrapper--content > main > div.overlay.overlay__open > section > div > div > div > form > button"
   );
