@@ -1,0 +1,26 @@
+
+{
+  "name": "fpl-checker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pally1995/fpl-checker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pally1995/fpl-checker/issues"
+  },
+  "homepage": "https://github.com/pally1995/fpl-checker#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "puppeteer": "^9.1.1"
+  }
+}
