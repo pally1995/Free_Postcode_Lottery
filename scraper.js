@@ -80,19 +80,18 @@ async function accessFPL() {
     //TODO: work out how to get all items from stackpot list - access the children within the result-header div.
 
 
-    //Gets first element in the claimed section - this needs a conditional to skip if claimed doesnt exist
     const stackpotResultClaimed = await page.$eval(
       "#result-header > div:nth-child(1) > div:nth-child(3) > p", 
     (el) => el.textContent   
    );
    console.log(stackpotResultClaimed);
       //This gets the first element of the list of unclaimed prizes
+
     const stackpotResult = await page.$eval(
       "#result-header > div > p.result--postcode", 
-    (el) => el.textContent    
+    (el) => el.textContent 
    );
    console.log(stackpotResult);
-
 
     
 
@@ -100,8 +99,3 @@ async function accessFPL() {
 }
 
 accessFPL();
-
-
-//removes any commas if needed
-    //   let nodeArray = Array.from(stackpotResult);
-    // console.log(nodeArray.join().replace(/,/g, ''))  
