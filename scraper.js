@@ -1,8 +1,9 @@
-import express, { json } from 'express';
-import { launch } from 'puppeteer';
-
+const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
+
+import puppeteer from 'puppeteer';
+
 
 // Middleware to parse incoming JSON
 app.use(json());
@@ -13,7 +14,7 @@ app.post('/submit', async (req, res) => {
 
   try {
     // Launch Puppeteer browser instance
-    const browser = await launch({
+    const browser = await puppeteer.launch({
       headless: false,
       args: ["--disable-features=site-per-process"],
     });
@@ -46,7 +47,7 @@ app.post('/submit', async (req, res) => {
     await page.goto("https://pickmypostcode.com/api/index.php/entry/ref/refurl/campaign/21674/cid/landing/?_=1667585918311", { waitUntil: "networkidle0" });
 
     // Check if the winning postcode is found
-    const found = await page.evaluate(() => window.find("ng5 7at"));
+    const found = await page.evaluate(() => window.find(postcode));
 
     // Respond with a message based on the result
     if (found) {
