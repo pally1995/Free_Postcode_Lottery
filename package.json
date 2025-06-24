@@ -1,26 +1,24 @@
-
 {
-  "name": "fpl-checker",
+  "name": "fpl-checker2",
   "version": "1.0.0",
-  "description": "",
-  "main": "scraper.js",
+  "description": "��#\u0000 \u0000f\u0000r\u0000e\u0000e\u0000-\u0000p\u0000o\u0000s\u0000t\u0000c\u0000o\u0000d\u0000e\u0000-\u0000l\u0000o\u0000t\u0000t\u0000e\u0000r\u0000y\u0000-\u0000c\u0000h\u0000e\u0000c\u0000k\u0000e\u0000r\u0000\r\u0000 \u0000",
+  "main": "fetchData.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pally1995/fpl-checker.git"
+    "url": "git+https://github.com/pally1995/Free_Postcode_Lottery.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "bugs": {
-    "url": "https://github.com/pally1995/fpl-checker/issues"
+    "url": "https://github.com/pally1995/Free_Postcode_Lottery/issues"
   },
-  "homepage": "https://github.com/pally1995/fpl-checker#readme",
+  "homepage": "https://github.com/pally1995/Free_Postcode_Lottery#readme",
   "dependencies": {
-    "express": "^4.17.1",
-    "node-fetch": "^2.6.1",
-    "puppeteer": "^9.1.1"
+    "node-fetch": "^3.3.2"
   }
 }
