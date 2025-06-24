@@ -1,72 +1,101 @@
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 5000;
 
-import puppeteer from 'puppeteer';
+const puppeteer = require("puppeteer");
+
+async function accessFPL() {
+  //Set up puppeteer which opens a browser so i am able to inspect what is happening 
+
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ["--disable-features=site-per-process"],
+  });
+  const page = await browser.newPage();
+  page.setViewport({ width: 1000, height: 900 });
+  await page.goto("https://pickmypostcode.com/#", {
+    waitUntil: "networkidle0",
+  });
+
+  //Log into FPL using postcode & email address
+
+  await page.click(
+    "#v-rebrand > div.wrapper.top > div.wrapper--content.wrapper--content__relative > nav > ul > li.nav--buttons.nav--item > button.btn.btn-secondary.btn-cancel"
+  );
+  await page.type("#confirm-ticket", "ng5 7at");
+  await page.type("#confirm-email", "");
+  await page.click(
+    "#v-rebrand > div.wrapper.top > div.wrapper--content > main > div.overlay.overlay__open > section > div > div > div > form > button"
+  );
+
+  //Accept advertising settings within iFrame
+
+  await page.waitForNavigation({ waitUntil: "networkidle2" });
+  const frameHandle = await await page.$(".faktor-iframe-wrapper");
+  const frame = await frameHandle.contentFrame();
+  await frame.click("#save");
+
+  //Wait for Main result selector to load and retrieve result
+
+  await page.waitForSelector(
+    "#result > div > div.result--header > p.result--postcode"
+  );
+  const mainResult = await page.$eval(
+    "#result > div > div.result--header > p.result--postcode",
+    (el) => el.textContent
+  );
+  console.log(mainResult);
+
+  //Wait for video result to load and retrieve result
+
+  await page.click("#result > div > div.result--footer > div.result--button > a");
+  await page.waitForSelector("#bridVideoPlayer > div > div.brid-overlay-play-button.brid-button > span > svg > path:nth-child(2)")
+  await page.click("#bridVideoPlayer > div > div.brid-overlay-play-button.brid-button > span > svg > path:nth-child(2)")
+  await page.waitForSelector(
+    "#result-header > div > p.result--postcode", {timeout: 40000}
+  );
+  const videoResult = await page.$eval(
+    "#result-header > div > p.result--postcode",
+    (el) => el.textContent
+  );
+  console.log(videoResult);
+  
+  // Get survey draw
+
+  await page.click("#result-footer > div > div.result--button > a")
+  await page.waitForSelector("#result-survey > div:nth-child(1) > div > div.questions > div.survey-buttons > button.btn.btn-secondary");
+  await page.click("#result-survey > div:nth-child(1) > div > div.questions > div.survey-buttons > button.btn.btn-secondary");
+  await page.waitForSelector(
+    "#result-header > div > p.result--postcode", {timeout: 40000}
+  );
+  const surveyResult = await page.$eval(
+    "#result-header > div > p.result--postcode",
+    (el) => el.textContent
+  );
+  console.log(surveyResult);
+
+    //Check stackpot Draw
+    await page.click("#result-footer > div > div.result--button > a");
+    await page.waitForSelector(
+      "#result-header > div > p.result--postcode", {timeout: 40000}
+    );
+
+    //TODO: work out how to get all items from stackpot list - access the children within the result-header div.
 
 
-// Middleware to parse incoming JSON
-app.use(json());
+    const stackpotResultClaimed = await page.$eval(
+      "#result-header > div:nth-child(1) > div:nth-child(3) > p", 
+    (el) => el.textContent   
+   );
+   console.log(stackpotResultClaimed);
+      //This gets the first element of the list of unclaimed prizes
 
-// POST route to handle form submission
-app.post('/submit', async (req, res) => {
-  const { email, postcode } = req.body;
+    const stackpotResult = await page.$eval(
+      "#result-header > div > p.result--postcode", 
+    (el) => el.textContent 
+   );
+   console.log(stackpotResult);
 
-  try {
-    // Launch Puppeteer browser instance
-    const browser = await puppeteer.launch({
-      headless: false,
-      args: ["--disable-features=site-per-process"],
-    });
+    
 
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1000, height: 900 });
+  await browser.close();
+}
 
-    // Navigate to the page
-    await page.goto("https://pickmypostcode.com/#", { waitUntil: "networkidle0" });
-
-    // Close the pop-up
-    await page.click("#v-rebrand > div.wrapper.top > div.wrapper--content.wrapper--content__relative > nav > ul > li.nav--buttons.nav--item > button.btn.btn-secondary.btn-cancel");
-
-    // Type in postcode and email
-    await page.type("#confirm-ticket", postcode);
-    await page.type("#confirm-email", email);
-
-    // Click the submit button
-    await page.click("#v-rebrand > div.wrapper.top > div.wrapper--content > main > div.overlay.overlay__open > section > div > div > div > form > button");
-
-    // Wait for the page to load after submission
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-
-    // Interact with the iframe (if needed)
-    const frameHandle = await page.$(".faktor-iframe-wrapper");
-    const frame = await frameHandle.contentFrame();
-    await frame.click("#save");
-
-    // Navigate to the API URL
-    await page.goto("https://pickmypostcode.com/api/index.php/entry/ref/refurl/campaign/21674/cid/landing/?_=1667585918311", { waitUntil: "networkidle0" });
-
-    // Check if the winning postcode is found
-    const found = await page.evaluate(() => window.find(postcode));
-
-    // Respond with a message based on the result
-    if (found) {
-      res.json({ message: "Congratulations! You have a winning postcode! Log into the website to claim!" });
-    } else {
-      res.json({ message: "Sorry! No winning postcode today!" });
-    }
-
-    // Close the browser
-    await browser.close();
-
-  } catch (error) {
-    // Handle any errors
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while processing your request." });
-  }
-});
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+accessFPL();
