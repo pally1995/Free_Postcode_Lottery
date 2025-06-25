@@ -21,7 +21,7 @@ const winningPostcodes = async () => {
   const tenBonusDraw = results.bonus.ten.result;
   const twentyBonusDraw = results.bonus.twenty.result;
 
-  const stackpotDrawFormatted = stackpotDraw.join(', ');
+  const stackpotDrawFormatted = '➡️ ' + stackpotDraw.join(' \n    ➡️ ');
 
   const resultsSummary = `
     📬*Pick My Postcode Results*
@@ -32,7 +32,7 @@ const winningPostcodes = async () => {
 
     🎥 Video Draw:  ${videoDraw}
 
-    💰 Stackpot Draw:  ${stackpotDrawFormatted}
+    💰 Stackpot Draw:\n    ${stackpotDrawFormatted}
 
     🎁 £5 Bonus:  ${fiveBonusDraw}
 
