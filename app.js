@@ -22,13 +22,21 @@ const winningPostcodes = async () => {
   const twentyBonusDraw = results.bonus.twenty.result;
 
   const resultsSummary = `
-    The main draw winner is:  ${mainDraw};
-    The survey draw winner is:  ${surveyDraw};
-    The video draw winner is:  ${videoDraw};
-    The stackpot draw winners are:  ${stackpotDraw};
-    The £5 bonus draw winner is:  ${fiveBonusDraw};
-    The £10 bonus draw winner is:  ${tenBonusDraw};
-    The £20 bonus draw winner is:  ${twentyBonusDraw};
+    📬*Pick My Postcode Results*
+
+    🏆 Main Draw Winner:  ${mainDraw}
+
+    📝 Survey Draw:  ${surveyDraw}
+
+    🎥 Video Draw:  ${videoDraw}
+
+    💰 Stackpot Draw:  ${stackpotDraw}
+
+    🎁 £5 Bonus:  ${fiveBonusDraw}
+
+    🎁 £10 Bonus:  ${tenBonusDraw}
+    
+    🎁 £20 Bonus:  ${twentyBonusDraw}
   `;
 
   return resultsSummary;
