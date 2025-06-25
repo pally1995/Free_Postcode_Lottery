@@ -21,7 +21,7 @@ const winningPostcodes = async () => {
   const tenBonusDraw = results.bonus.ten.result;
   const twentyBonusDraw = results.bonus.twenty.result;
 
-  const stackpotDrawFormatted = stackpotDraw.split(',').join(',');
+  const stackpotDrawFormatted = stackpotDraw.join(', ');
 
   const resultsSummary = `
     📬*Pick My Postcode Results*
