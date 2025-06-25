@@ -1,4 +1,9 @@
 import fetch from 'node-fetch';
+import 'dotenv/config';
+
+const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
 
 const winningPostcodes = async () => {
   const response = await fetch(`https://pickmypostcode.com/api/index.php/entry/ref/refurl/campaign/21674/cid/landing/?_=${Date.now()}`); 
@@ -16,13 +21,45 @@ const winningPostcodes = async () => {
   const tenBonusDraw = results.bonus.ten.result;
   const twentyBonusDraw = results.bonus.twenty.result;
 
-  console.log("The main draw winner is: ", mainDraw);
-  console.log("The survey draw winner is: ", surveyDraw);
-  console.log("The video draw winner is: ", videoDraw);
-  console.log("The stackpot draw winners are: ", stackpotDraw);
-  console.log("The £5 bonus draw winner is: ", fiveBonusDraw);
-  console.log("The £10 bonus draw winner is: ", tenBonusDraw);
-  console.log("The £20 bonus draw winner is: ", twentyBonusDraw);
+  const resultsSummary = `
+    The main draw winner is:  ${mainDraw};
+    The survey draw winner is:  ${surveyDraw};
+    The video draw winner is:  ${videoDraw};
+    The stackpot draw winners are:  ${stackpotDraw};
+    The £5 bonus draw winner is:  ${fiveBonusDraw};
+    The £10 bonus draw winner is:  ${tenBonusDraw};
+    The £20 bonus draw winner is:  ${twentyBonusDraw};
+  `;
+
+  return resultsSummary;
 };
 
-winningPostcodes();
+const sendTelegramMessage = async (text) => {
+  const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+
+  const res = await fetch(url, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: text,
+    })
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Failed to send telegram message: ${errorText}`);
+  }
+};
+
+const run = async() => {
+  try {
+    const message = await winningPostcodes();
+    await sendTelegramMessage(message);
+    console.log("Telegram message sent!");
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
+run();
