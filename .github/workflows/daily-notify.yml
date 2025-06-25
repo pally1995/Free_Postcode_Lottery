@@ -1,6 +1,7 @@
 name: Daily Telegram Notification
 
 on:
+  workflow_dispatch:
   schedule:
     # Runs every day at 8 AM UTC - you can adjust the time
     - cron: '0 13 * * *'
