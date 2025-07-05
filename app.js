@@ -1,12 +1,13 @@
-import fetch from 'node-fetch';
-import 'dotenv/config';
+import fetch from "node-fetch";
+import "dotenv/config";
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const chatIds = [process.env.TELEGRAM_CHAT_ID, process.env.TELEGRAM_CHAT_ID2];
 
-
 const winningPostcodes = async () => {
-  const response = await fetch(`https://pickmypostcode.com/api/index.php/entry/ref/refurl/campaign/21674/cid/landing/?_=${Date.now()}`); 
+  const response = await fetch(
+    `https://pickmypostcode.com/api/index.php/entry/ref/refurl/campaign/21674/cid/landing/?_=${Date.now()}`
+  );
   const json = await response.json();
 
   //result path
@@ -21,7 +22,7 @@ const winningPostcodes = async () => {
   const tenBonusDraw = results.bonus.ten.result;
   const twentyBonusDraw = results.bonus.twenty.result;
 
-  const stackpotDrawFormatted = '➡️ ' + stackpotDraw.join(' \n    ➡️ ');
+  const stackpotDrawFormatted = "➡️ " + stackpotDraw.join(" \n    ➡️ ");
 
   const resultsSummary = `
     📬*Pick My Postcode Results*
@@ -47,30 +48,31 @@ const winningPostcodes = async () => {
 const sendTelegramMessage = async (text) => {
   const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
-  for (const chatId of chatIds){
-  const res = await fetch(url, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: text,
-    })
-  });
+  for (const chatId of chatIds) {
+    console.log("Sending to chat ID: ", chatId);
+    const res = await fetch(url, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: text,
+      }),
+    });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Failed to send telegram message: ${errorText}`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Failed to send telegram message: ${errorText}`);
+    }
   }
-}
 };
 
-const run = async() => {
+const run = async () => {
   try {
     const message = await winningPostcodes();
     await sendTelegramMessage(message);
     console.log("Telegram message sent!");
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error("Error:", error.message);
   }
 };
 
