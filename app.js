@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import 'dotenv/config';
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const chatIds = [process.env.TELEGRAM_CHAT_ID, process.env.TELEGRAM_CHAT_ID2];
 
 
 const winningPostcodes = async () => {
@@ -47,11 +47,12 @@ const winningPostcodes = async () => {
 const sendTelegramMessage = async (text) => {
   const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
+  for (const chatId of chatIds){
   const res = await fetch(url, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      chat_id: TELEGRAM_CHAT_ID,
+      chat_id: chatId,
       text: text,
     })
   });
@@ -60,6 +61,7 @@ const sendTelegramMessage = async (text) => {
     const errorText = await res.text();
     throw new Error(`Failed to send telegram message: ${errorText}`);
   }
+}
 };
 
 const run = async() => {
